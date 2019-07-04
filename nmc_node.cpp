@@ -440,12 +440,14 @@ int nmc_node_demo_main(int argc, const char *argv[]) {
 	const char *db_file = "test.db";
 	bool ret = false;
 
-
 	user_data.write_db = true;
 	for (int i = 0; i < argc; i++) {
 		if (strcmp(argv[i], "--db") == 0) {
-			if (i + 1 < argc) {
-				db_file = argv[i + 1];
+			i++;
+			if (i < argc) {
+				db_file = argv[i];
+			} else {
+				break;
 			}
 		} else if (strcmp(argv[i], "--no-write") == 0) {
 			user_data.write_db = false;
