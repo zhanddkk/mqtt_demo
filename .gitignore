@@ -1,0 +1,11 @@
+# Ignore everything in this directory
+*~
+arm/
+Debug/
+Release/
+
+# Except this file
+!.gitignore
+
+.settings/
+*.db*
