@@ -8,6 +8,7 @@
 #ifndef VALUE_H_
 #define VALUE_H_
 
+#include <vector>
 #include <tinycbor/cbor.h>
 
 class BasicValue {
@@ -251,4 +252,48 @@ public:
     char r_d_information[256];
 };
 
+class EventLogDataToNmcArrayValue: public BasicValue {
+public:
+	EventLogDataToNmcArrayValue() {
+		m_val_counts = 0;
+	}
+
+	virtual ~EventLogDataToNmcArrayValue() {
+
+	}
+
+	const EventLogDataToNmcValue &get_val(int index) {
+		return m_val[index];
+	}
+
+	int val_counts() {
+		return m_val_counts;
+	}
+
+	virtual bool decode(CborValue &cbor_val) {
+		bool ret = false;
+		if (cbor_value_is_array(&cbor_val)) {
+			CborValue recursed;
+			CborError err = cbor_value_enter_container(&cbor_val, &recursed);
+			if (err == CborNoError) {
+				ret = true;
+				for (m_val_counts = 0;
+					((uint32_t)m_val_counts < sizeof(m_val) / sizeof(EventLogDataToNmcValue)) && (!cbor_value_at_end(&recursed));
+					m_val_counts++) {
+					if (!m_val[m_val_counts].decode(recursed)) {
+						m_val_counts = 0;
+						ret = false;
+						break;
+					}
+				}
+				ret = ret && (cbor_value_leave_container(&cbor_val, &recursed) == CborNoError);
+			}
+		}
+		return ret;
+	}
+
+private:
+	EventLogDataToNmcValue m_val[256];
+	int m_val_counts;
+};
 #endif /* VALUE_H_ */

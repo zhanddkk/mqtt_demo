@@ -16,14 +16,15 @@ struct stProcess {
 static struct stProcess process_list[] = {
 	{"slc", slc_node_demo_main},
 	{"nmc", nmc_node_demo_main},
-	{"monitor", sys_monitor_main}
+	{"monitor", sys_monitor_main},
+	{"event-log", event_log_demo_main}
 };
 
 const int process_number = sizeof(process_list) / sizeof(struct stProcess);
 
 int main(int argc, const char *argv[]) {
 	int ret = 0;
-	int index = 0;
+	int index = 3;
 	if (argc > 1) {
 		const char *name = argv[1];
 		for (int i = 0; i < process_number; i++) {
